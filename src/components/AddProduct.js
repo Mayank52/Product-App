@@ -4,23 +4,26 @@ import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import { db } from "../config/firebase";
 import AddImage from "./AddImage";
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function AddProduct({
-  product,
-  isEdit,
-  setIsEdit,
-  setSelectedProduct,
-  id,
-}) {
+export default function AddProduct() {
+  const { selectedProduct, isEdit } = useSelector((state) => state);
+  const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState();
-  const [imgUrl, setImgUrl] = useState(product ? product.image : "");
-  const [productName, setProductName] = useState(product ? product.name : "");
-  const [price, setPrice] = useState(product ? product.price : "");
+  const [imgUrl, setImgUrl] = useState(
+    selectedProduct ? selectedProduct.product.image : ""
+  );
+  const [productName, setProductName] = useState(
+    selectedProduct ? selectedProduct.product.name : ""
+  );
+  const [price, setPrice] = useState(
+    selectedProduct ? selectedProduct.product.price : ""
+  );
   const [addError, setAddError] = useState("");
   const history = useHistory();
 
-  const types = ["image/png", "image/jpeg"];
+  const types = ["image/png", "image/jpeg", "image/jpg"];
 
   const fileUploadHandler = (e) => {
     console.log(e.target.files[0]);
@@ -35,17 +38,23 @@ export default function AddProduct({
   };
 
   const addProduct = () => {
+      console.log(productName, imgUrl, price);
     if (productName && imgUrl && price) {
       if (isEdit) {
-        console.log(id, price);
-        db.collection("products").doc(id).update({
+        db.collection("products").doc(selectedProduct?.id).update({
           name: productName,
           price: price,
           image: imgUrl,
         });
 
-        setIsEdit(false);
-        setSelectedProduct(null);
+        dispatch({
+          type: "SET_IS_EDIT",
+          payload: false,
+        });
+        dispatch({
+          type: "SET_SELECTED_PRODUCT",
+          payload: null,
+        });
       } else {
         db.collection("products").add({
           name: productName,
@@ -63,7 +72,7 @@ export default function AddProduct({
   return (
     <Container>
       <Header>
-        <h3>Add Product</h3>
+        <h2>Add Product</h2>
       </Header>
       <AddProductContainer>
         <ImageContainer>
@@ -73,11 +82,7 @@ export default function AddProduct({
             <PhotoCameraIcon />
           </label>
           {selectedFile && (
-            <AddImage
-              file={selectedFile}
-              setSelectedFile={setSelectedFile}
-              setImgUrl={setImgUrl}
-            />
+            <AddImage file={selectedFile} setImgUrl={setImgUrl} error={error} />
           )}
         </ImageContainer>
         <DetailsContainer>
@@ -131,7 +136,7 @@ const ImageContainer = styled.div`
     display: block;
     width: 40px;
     height: 40px;
-    border: 1px solid lightgray;
+    border: 1px solid purple;
     border-radius: 4px;
     color: lightgray;
     display: flex;
@@ -166,7 +171,7 @@ const InputContainer = styled.div`
   }
 `;
 const Header = styled.div`
-  h3 {
+  h2 {
     margin: 0;
   }
 `;

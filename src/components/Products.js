@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect } from "react";
 import styled from "styled-components";
-import firebase from "firebase";
 import { db } from "../config/firebase";
 import ProductCard from "./ProductCard";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function Products({ setIsEdit, setSelectedProduct }) {
-  const [products, setProducts] = useState([]);
+export default function Products() {
+  const { products } = useSelector((state) => state);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     getProducts();
@@ -21,7 +22,10 @@ export default function Products({ setIsEdit, setSelectedProduct }) {
         };
       });
 
-      setProducts(tempProduct);
+      dispatch({
+        type: "SET_PRODUCTS",
+        payload: tempProduct,
+      });
     });
   };
 
@@ -37,8 +41,6 @@ export default function Products({ setIsEdit, setSelectedProduct }) {
             key={product.id}
             id={product.id}
             product={product.product}
-            setIsEdit={setIsEdit}
-            setSelectedProduct={setSelectedProduct}
           />
         ))}
       </ProductsContainer>

@@ -1,20 +1,25 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { db } from "../config/firebase";
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-export default function ProductCard({
-  product,
-  id,
-  setIsEdit,
-  setSelectedProduct,
-}) {
+export default function ProductCard({ product, id }) {
+  const dispatch = useDispatch();
+
   let history = useHistory();
   const editProduct = () => {
-    setIsEdit(true);
-    setSelectedProduct({ product, id });
+    dispatch({
+      type: "SET_IS_EDIT",
+      payload: true,
+    });
+    dispatch({
+      type: "SET_SELECTED_PRODUCT",
+      payload: { product, id },
+    });
+
     history.push("/addProduct");
   };
 
@@ -87,9 +92,9 @@ const DetailsContainer = styled.div`
 const ButtonIcon = styled.div`
   .MuiSvgIcon-root {
     color: purple;
-    
+
     :hover {
-      transform: scale(1.1);
+      transform: scale(1.2);
     }
   }
 `;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { storage, db } from "./config/firebase";
+import { storage } from "./config/firebase";
 
 export const useStorage = (file) => {
   const [progress, setProgress] = useState(0);
@@ -7,7 +7,6 @@ export const useStorage = (file) => {
   const [url, setUrl] = useState(null);
 
   useEffect(() => {
-      console.log("File: ",file)
     const storageRef = storage.ref();
     const productRef = storageRef.child(file.name);
 
@@ -31,5 +30,3 @@ export const useStorage = (file) => {
 
   return { progress, url, uploadError };
 };
-
-// export default useStorage;

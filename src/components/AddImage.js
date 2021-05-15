@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
-import { db } from "../config/firebase";
 import { useStorage } from "../useStorage";
 
-export default function AddImage({file, setSelectedFile, setImgUrl}) {
-  const { progress, url } = useStorage(file);
-  const [error, setError] = useState();
-
-  const types = ["image/png", "image/jpeg"];
+export default function AddImage({ file, setImgUrl, error }) {
+  const { url, progress } = useStorage(file);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     console.log(url);
     if (url) {
       setImgUrl(url);
-      setSelectedFile(null);
     }
   }, [url]);
+
+  useEffect(() => {
+    if (progress < 100) {
+      setMessage("Uploading Image...");
+    } else {
+      setMessage(null);
+    }
+  }, [progress]);
 
   return (
     <Container>
       <div className="imgOutput">
+        {message && <div className="message">{message}</div>}
         {error && <div className="error">{error}</div>}
         {file && <div className="file">{file.name}</div>}
       </div>
