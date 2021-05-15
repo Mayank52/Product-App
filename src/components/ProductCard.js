@@ -60,7 +60,7 @@ const Container = styled.div`
   flex-direction: column;
 
   box-shadow: 0px 1px 2px gray;
-  margin-top: 3%;
+  margin-top: 5%;
 `;
 const ProductContainer = styled.div`
   display: flex;

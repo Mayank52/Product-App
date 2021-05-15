@@ -56,7 +56,7 @@ export default function Products() {
 const Container = styled.div`
   height: 100vh;
   width: 100vw;
-  max-width: 1200px;
+  max-width: 500px;
   margin: auto;
   padding: 5%;
   background-color: #f8f8f8;
